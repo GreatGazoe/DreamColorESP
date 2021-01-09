@@ -1,7 +1,7 @@
 # DreamColorESP
 about
 -----
-Control WS2812b LEDs with ESP8266 (based on neopixel library).
+Control induvidually addressable LED's with ESP8266 (based on neopixel library).
 A webserver is used to adjust Hue, Saturation and Brightness. 
 These settings will be converted to rgb:
 ![alt text](data/DreamColorIndex.png)
