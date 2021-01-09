@@ -48,7 +48,7 @@ and upload sketch to ESP-device (Usb), be sure that the ESP-device settings are 
 Important settings are "Board" and "port". After this reset your ESP. Search for the ESP-device in your 
 network, you can use "Fing"(android app), "ipconfig" in command prompt under windows or "arp -a" in linux 
 terminal for that. Of course you can find the device in your router's main page too. Write down the 
-IP-address and open "<IP-address>/update" in your browser.
+IP-address and open "IP-address/update" in your browser.
 ![alt text](data/UpdateHtml.png)
 
 First upload "SPIFFS.bin" with "Update FileSystem" wait untill "Update Success!!" and reboot, then 
