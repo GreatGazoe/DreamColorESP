@@ -52,10 +52,11 @@ your browser.
 
 First upload "SPIFFS.bin" with "Update FileSystem" wait untill "Update Success!!" and reboot, then 
 upload "DreamColorESP.bin" with "Update Firmware" wait again untill update has finished. After reboot
-connect with "DreamColor-ESP-01" device in your network, password is "123456789". Open "192.168.4.1" 
-in your webbrowser and you will have access to the webserver from "DreamColorESP". Complete setup
+connect to "DreamColor-ESP-01" device in your network, password is "123456789". Open "192.168.4.1" 
+in your webbrowser and you will have access to "DreamColorESP" webserver. Complete setup
 in "WiFi Settings" section. Now you can connect your LED-Strip and follow the steps in the "Settings"
-section in the webserver.
+section in the webserver. Choose PIN-number 12 on ESP8266 for DATA connection, on Arduino-boards they
+use D6.
 
 Have fun !!
 
