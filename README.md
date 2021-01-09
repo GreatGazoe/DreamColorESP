@@ -6,9 +6,9 @@ A webserver is used to adjust Hue, Saturation and Brightness.
 These settings will be converted to rgb:
 ![alt text](data/DreamColorIndex.png)
 
-Effects are implemented, several are base effect copied from
+Effects are implemented, several are base effects copied from
 the Adafruit-Neopixel site (Strandtest, RainbowChasing etc.)
-You can always do a request for extra effects to be implemented. 
+You can always do a request and I will implement extra effects. 
 
 Adjustable settings are:  
 
