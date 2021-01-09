@@ -50,4 +50,6 @@ and reset your ESP. Search for the ESP-device in your network, you can use "Fing
 , "ipconfig" in command prompt in windows or "arp -a" in linux terminal for that. Of course you can find 
 the device in your router's main page too. Write down the IP-address and open "<IP-address>/update" in 
 your browser.
+![alt text](data/UpdateHtml.png)
+
 
