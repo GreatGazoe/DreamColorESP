@@ -57,7 +57,8 @@ connect to "DreamColor-ESP-01" device in your network, password is "123456789". 
 in your webbrowser and you will have access to "DreamColorESP" webserver. Complete setup
 in "WiFi Settings" section. Now you can connect your LED-Strip and follow the steps in the "Settings"
 section in the webserver. Choose PIN-number 12 on ESP8266 for DATA connection, on Arduino-boards they
-use D6.
+use D6. Learn how to connect a LED-strip on https://learn.adafruit.com/adafruit-neopixel-uberguide/basic-connections.
+I don't use an extra Capacitor nor Resistor nor Level-Shifter with an 199 Led's strip, until now no problemo. 
 
 Have fun !!
 
