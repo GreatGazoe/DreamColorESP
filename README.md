@@ -27,8 +27,8 @@ command line looks lile this:
 MQTT-user and password can be switched on/off and are (of course)
 adjustable.
 MQTT-status updates are send, colors are send as rgb and hue, saturation
-and 50% brightness, this because the webserver converts hsb to rgb. 
-Status updates are send to adjustable outTopic name (default is "outTopic").
+(for conversion I used 50% brightness), this because the webserver converts hsb 
+to rgb. Status updates are send to adjustable outTopic name (default is "outTopic").
 
 Webserver contains OTA-section, binary sketch file can be uploaded ota aswell
 binary SPIFFS-file (containing HTML, CSS, and config files). Just select file
