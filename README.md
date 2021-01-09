@@ -18,9 +18,7 @@ Adjustable settings are:
 - Data PIN-number (default 12). 
 
 Webserver is accessible thru Station-mode (connected with router) 
-or Acces-Point-mode (direct connection). AP-mode password is "123456789"
-and webserver can be accessed on "192.168.4.1". Here you can finish the
-setup in "WiFi-settings" section.
+or Acces-Point-mode (direct connection).
 
 MQTT is integrated and settings are adjustable thru mqtt-server,
 command line looks lile this: 
