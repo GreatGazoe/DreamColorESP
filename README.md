@@ -45,10 +45,10 @@ To upload the sketch.bin and filesystem.bin files we gonna use the "webupdater" 
 This sketch can be found under "examples" in the "files" section. Search for "ESP8266HTTPUpdateServer"
 and scroll down to "WebUpdater". Fill in your network credentials under "your-ssid" and "your-password"
 and upload sketch to ESP-device (Usb), be sure that the ESP-device settings are correct ("Tools" section). 
-After this reset your ESP. Search for the ESP-device in your network, you can use "Fing"(android app)
-, "ipconfig" in command prompt in windows or "arp -a" in linux terminal for that. Of course you can find 
-the device in your router's main page too. Write down the IP-address and open "<IP-address>/update" in 
-your browser.
+Important settings are "Board" and "port". After this reset your ESP. Search for the ESP-device in your 
+network, you can use "Fing"(android app), "ipconfig" in command prompt under windows or "arp -a" in linux 
+terminal for that. Of course you can find the device in your router's main page too. Write down the 
+IP-address and open "IP-address/update" in your browser.
 ![alt text](data/UpdateHtml.png)
 
 First upload "SPIFFS.bin" with "Update FileSystem" wait untill "Update Success!!" and reboot, then 
