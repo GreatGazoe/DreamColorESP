@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<head>
+<title>DreamColor-ESP</title>
+<meta name="viewport" content="width=device-width, initial-scale=0.6, user-scalable=no"></meta>
+<link rel="stylesheet" type="text/css" href="style.css"></link>
+<script src="hammer.min.js"></script>
+<style>
+body {
+  background-color	: %Theme%;
+  color				: %Themetext%;
+}
+</style>
+</head>
+<body>
+<div id="swipebox" class="swipebox" style="position:absolute; top:0px; left:180px;"></div>
+
+<h2 class="textall" style="position:absolute; top: 0px; left: 80px;">DreamColor-Esp WebServer</h2>
+
+<div id="menu" style="position:absolute; top:0px; left:0px;">
+	<div id="hamburgercontainer" class="container" style="position:relative; top:12px; left:10px;"  onclick="hamburgericon(this)">
+  		<div id="bar1" class="bar1"></div>
+ 		<div class="bar2"></div>
+  		<div class="bar3"></div>
+	</div>
+	
+	<div id="myNav" class="overlay">
+  		<div id="content" class="overlay-content">
+			<a id="menu1" href="/" style="position:absolute; top:80px; left:0px;">Control</a>
+    		<a id="menu2" href="/settingshtml" style="position:absolute; top:130px; left:0px;">Settings</a>
+			<a id="menu3" href="/wifi" style="position:absolute; top:180px; left:0px;">WiFi SetUp</a>
+    		<a id="menu4" class="menuitem" href="/ota" style="position:absolute; top:230px; left:0px;">OTA Update</a>
+    	</div>
+	</div>
+</div>
+
+<iframe name="hiddeniframe" id="hiddeniframe" style="width:0; height:0"> </iframe>
+
+<div style="position:absolute; top:70px; left:100px;">
+	<h3 class="textall" style="position:relative; top: 0px; left: 0px;">OTA-Update</h3>
+	<div class="textall" style="position:relative; top: -10px; left: 0px;">Upload your compiled binary file here</div>
+	<div class="textall" style="position:relative; top: -7px; left: 50px;">(Sketch.bin / SPIFFS.bin)</div>
+</div>
+
+<div style="position:absolute; top:170px; left:100px;">
+	<form method='POST' action='/update' enctype='multipart/form-data' target='hiddeniframe'><input type='file' accept='.bin,.bin.gz' name='update'><input type='submit' value='Update'></form>
+</div>
+
+<div style="position:absolute; top:200px; left:100px;">
+	<div id="websockettext" style="position:relative; top:5px; left:80px;"></div>
+	<div id="spinner" class="loader" style="position:absolute; top: 0px; left:20px;"></div>
+</div>
+
+<div style="position:absolute; top:220px; left: 100px;" >
+	<h3 class="textall" style="position:relative; top: 0px; left: 0px;">MQTT-Settings</h3>
+	<input type="checkbox" id="usemqtttoggle" onchange="usemqtt(this);" style="position:relative; top: -13px; left:0px;">
+	<div class="textall" style="position:relative; top:-35px; left:50px;">Use MQTT</div>
+	<input type="text" id="mqttserver" value="%mqttserver%" name="mqttserver" style="position:relative; top: -25px; left: -1px; width:150px;">
+	<input type="text" id="mqtttopic" value="%mqtttopic%" name="mqtttopic" style="position:relative; top:4px; left: -160px; width:150px;">
+	<input type="text" id="mqttouttopic" value="%mqttouttopic%" name="mqttouttopic" style="position:relative; top:33px; left: -325px; width:150px;">
+	<div class="textall" style="position:relative; top:-44px; left:170px;">MQTT-Server (port 1883)</div>
+	<div class="textall" style="position:relative; top:-34px; left:170px;">MQTT-Topic Name</div>
+	<div class="textall" style="position:relative; top:-25px; left:170px;">MQTT-outTopic Name (status Update)</div>
+	<input type="checkbox" id="usemqttpasswordtoggle" onchange="usemqttpassword(this);" style="position:relative; top:-15px; left:0px;">
+	<div class="textall" style="position:relative; top:-36px; left:50px;">Use Username/Password</div>
+	<input type="text" id="mqttuser" value="%mqttuser%" name="mqttuser" style="position:relative; top: -25px; left: -1px; width:150px;">
+	<input type="password" id="mqttpassword" value="%mqttpassword%" name="mqttpassword" style="position:relative; top: 5px; left: -160px; width:150px;">
+	<div class="textall" style="position:relative; top:-44px; left:170px;">Username</div>
+	<div class="textall" style="position:relative; top:-33px; left:170px;">Password</div>
+	<div class="savebutton" onclick="savecon()"  style="position:relative; top:-20px; left:0px;"><h5 class="savebuttontext" style="position:relative; top:-18.5px; left:0px;">Save</h5></div>
+	<div class="textall" style="position:relative; top:-42px; left:67px;">Save, device will restart</div>
+</div>
+
+</body>
+<script type="text/javascript">
+window.onload = function() {
+	myElement = document.getElementById('myNav');
+	mc = new Hammer(myElement);
+	myElement2 = document.getElementById('swipebox');
+	mc2 = new Hammer(myElement2);
+	event();
+}
+
+function event() {
+	mc.on("swipeleft swiperight", function(ev) {
+		document.getElementById("hamburgercontainer").click();
+	});
+	
+	mc2.on("swiperight", function(ev) {
+		document.getElementById("menu3").click();
+	});
+}
+
+function hamburgericon(x ) {
+  var barclass = x.classList.toggle("change");
+  if (barclass == true) {
+		document.getElementById("myNav").style.width = "180px";
+		document.getElementById("content").style.display = "block";
+	} else {
+		document.getElementById("myNav").style.width = "60px";
+		document.getElementById("content").style.display = "none";
+	}
+}
+
+function closemenu() {
+	document.getElementById("myNav").style.width = "60px";
+	document.getElementById("content").style.display = "none";
+}
+
+var websock;
+var spinner = document.getElementById("spinner");
+var websockettext = document.getElementById("websockettext");
+websock = new WebSocket('ws://' + document.location.host + '/ws',['Arduino']);
+websock.onopen = function(evt) { console.log('websock open'); };
+websock.onmessage = function(evt) {
+	console.log(evt);
+	if (evt.data === 'Update Success!!') {
+		websockettext.textContent = evt.data;
+		spinner.style.display = "none";
+		requestreboot();
+		setTimeout(function() {
+			location.reload();
+		},1000);
+	} else if (evt.data === 'Update Started') {
+		websockettext.textContent = evt.data;
+		spinner.style.display = "block";
+	} else if (evt.data === 'Update Error') {
+		websockettext.textContent = evt.data;
+		spinner.style.display = "none";
+	} else {
+		console.log('unknown event');
+		spinner.style.display = "none";
+	}
+	setTimeout(function() {
+		websockettext.textContent = "";
+	},10000);
+};
+
+checkusemqtt();
+checkusemqttpassword();
+
+function requestreboot() {
+	var url = "/settings/savecor";
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.open( "GET", url); 
+	xmlHttp.send();
+}
+
+function responseota() {
+	var ifrm = document.getElementById('hiddeniframe');
+	//var win = ifrm.contentWindow;
+	var doc = ifrm.contentDocument || ifrm.contentWindow.document;
+	var html = ifrm.Body.InnerHtml;
+	alert(html);
+}
+
+function usemqtt(value) {
+	if (value.checked == true) {
+		var url = "/settings/mqtton";
+		xmlHttp = new XMLHttpRequest();
+		xmlHttp.open( "GET", url); 
+		xmlHttp.send();
+	} else if (value.checked == false) {
+		var url = "/settings/mqttoff";
+		xmlHttp = new XMLHttpRequest();
+		xmlHttp.open( "GET", url); 
+		xmlHttp.send();
+	}
+}
+
+function checkusemqtt() {
+	var url = "/settings/usemqttrequest";
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.onreadystatechange = function(event) {
+		if (this.readyState == 4 && this.status == 200) {
+			var str = xmlHttp.responseText;
+			if (str == "0") {
+				var usemqtttoggle = document.getElementById("usemqtttoggle");
+				usemqtttoggle.checked = false;
+			} else if (str == "1") {
+				var usemqtttoggle = document.getElementById("usemqtttoggle");
+				usemqtttoggle.checked = true; 
+			}
+		}
+	}
+	xmlHttp.open( "GET", url); 
+	xmlHttp.send();
+}
+
+function usemqttpassword(value) {
+	if (value.checked == true) {
+		var url = "/settings/mqttpasswordon";
+		xmlHttp = new XMLHttpRequest();
+		xmlHttp.open( "GET", url); 
+		xmlHttp.send();
+	} else if (value.checked == false) {
+		var url = "/settings/mqttpasswordoff";
+		xmlHttp = new XMLHttpRequest();
+		xmlHttp.open( "GET", url); 
+		xmlHttp.send();
+	}
+}
+
+function checkusemqttpassword() {
+	var url = "/settings/usemqttpasswordrequest";
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.onreadystatechange = function(event) {
+		if (this.readyState == 4 && this.status == 200) {
+			var str = xmlHttp.responseText;
+			if (str == "0") {
+				var usemqttpasswordtoggle = document.getElementById("usemqttpasswordtoggle");
+				usemqttpasswordtoggle.checked = false;
+			} else if (str == "1") {
+				var usemqttpasswordtoggle = document.getElementById("usemqttpasswordtoggle");
+				usemqttpasswordtoggle.checked = true; 
+			}
+		}
+	}
+	xmlHttp.open( "GET", url); 
+	xmlHttp.send();
+}
+
+function changemqttsettings() {
+	var mqttuser = document.getElementById("mqttuser").value;
+	var mqttpassword = document.getElementById("mqttpassword").value;
+	var mqttserver = document.getElementById("mqttserver").value;
+	var mqtttopic = document.getElementById("mqtttopic").value;
+	var mqttouttopic = document.getElementById("mqttouttopic").value;
+	var url = "/settings/changemqttsettings?mqttuser=" + mqttuser + "&mqttpassword=" + mqttpassword + "&mqttserver=" + mqttserver + "&mqtttopic=" + mqtttopic + "&mqttouttopic=" + mqttouttopic;
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.open( "GET", url); 
+	xmlHttp.send();
+}
+
+function savecon() {
+	changemqttsettings();
+	var url = "/settings/savecor";
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.open( "GET", url); 
+	xmlHttp.send();
+}
+
+</script>
+</html>	
