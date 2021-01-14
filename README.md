@@ -38,7 +38,7 @@ will be refreshed.
 Setup
 -----
 The first setup will be done thru Arduino-Ide, installation instructions for different 
-platforms can found on Arduino website.
+platforms can be found on Arduino website.
 Instructions for the ESP8266 chip to be supported by the Arduino environment can be found 
 here https://github.com/esp8266/Arduino.
 To upload the sketch.bin and filesystem.bin files we gonna use the "webupdater" sketch.
