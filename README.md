@@ -52,7 +52,7 @@ IP-address and open "IP-address/update" in your browser.
 ![alt text](data/UpdateHtml.png)
 
 First upload "SPIFFS.bin" with "Update FileSystem" wait untill "Update Success!!" and reboot, then 
-upload "DreamColorESP.bin" with "Update Firmware" wait again untill update has finished. After reboot
+upload "DreamColorESP.bin" with "Update Firmware", wait again untill update has finished. After reboot
 connect to "DreamColor-ESP-01" device in your network, password is "123456789". Open "192.168.4.1" 
 in your webbrowser and you will have access to "DreamColorESP" webserver. Complete setup
 in "WiFi Settings" section. Now you can connect your LED-Strip and follow the steps in the "Settings"
